@@ -9,10 +9,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SignInScreen = ({ navigation }) => {
+const SignInScreen = ({ navigation, setUserToken }) => {
   const url =
     "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -54,18 +56,19 @@ const SignInScreen = ({ navigation }) => {
           {errorMessage && <Text>{errorMessage}</Text>}
           <TouchableOpacity
             onPress={async () => {
-              if (email && password) {
-                try {
+              try {
+                if (email && password) {
                   const response = await axios.post(url, { email, password });
                   const { id, token } = response.data;
-                  console.log("id, token >> ", id, token);
-                  alert("You're logged in !!!");
-                } catch (error) {
-                  console.log(error.response);
-                  alert("Email or username doesn't exist");
+                  // console.log("id, token >> ", id, token);
+                  AsyncStorage.setItem("token", token);
+                  setUserToken(token);
+                } else {
+                  setErrorMessage("All fields must be filled");
                 }
-              } else {
-                setErrorMessage("All fields must be filled");
+              } catch (error) {
+                console.log(error.response);
+                alert("Email or username doesn't exist");
               }
             }}
             style={styles.btn}
