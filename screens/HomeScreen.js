@@ -1,4 +1,7 @@
+// Packages
 import { useState, useEffect } from "react";
+import axios from "axios";
+// Components
 import {
   StyleSheet,
   View,
@@ -8,15 +11,10 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
-// import { NavigationContainer } from "@react-navigation/native";
-// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import axios from "axios";
+// Constants
+import Constants from "expo-constants";
 
-const url = "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms";
-
-// const Tab = createBottomTabNavigator();
-
-const HomeScreen = () => {
+const HomeScreen = ({ navigation, url }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
 
@@ -41,6 +39,7 @@ const HomeScreen = () => {
       keyExtractor={(item) => {
         return item._id;
       }}
+      style={styles.container}
       renderItem={({ item }) => {
         return (
           <View>
@@ -54,7 +53,13 @@ const HomeScreen = () => {
             </View>
             <View style={styles.flexRow}>
               <View>
-                <Text>{item.title}</Text>
+                <Text
+                  onPress={() => {
+                    navigation.navigate("room", { id: item._id, url: url });
+                  }}
+                >
+                  {item.title}
+                </Text>
                 <View style={styles.flexRow}>
                   <Text>{item.ratingValue}</Text>
                   <Text>{item.reviews} reviews</Text>
@@ -73,6 +78,9 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: Constants.statusBarHeight,
+  },
   flexRow: {
     flexDirection: "row",
   },

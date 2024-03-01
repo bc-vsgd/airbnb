@@ -1,5 +1,7 @@
+// Packages
 import axios from "axios";
 import { useState } from "react";
+// Components
 import {
   View,
   Text,
@@ -9,10 +11,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+// Constants
+import Constants from "expo-constants";
 
-const SignUpScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation, setUserToken }) => {
   const url =
     "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/sign_up";
+  // States
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
@@ -89,9 +94,9 @@ const SignUpScreen = ({ navigation }) => {
           <TouchableOpacity
             style={styles.btn}
             onPress={async () => {
-              if (email && username && description && password && password2) {
-                if (password === password2) {
-                  try {
+              try {
+                if (email && username && description && password && password2) {
+                  if (password === password2) {
                     const response = await axios.post(url, {
                       email,
                       username,
@@ -99,17 +104,17 @@ const SignUpScreen = ({ navigation }) => {
                       description,
                     });
                     const { token } = response.data;
-                    console.log(token);
-                    alert("Sign up ok !!!");
-                  } catch (error) {
-                    console.log(error.message);
-                    alert("These email or username already exist");
+                    // console.log(token);
+                    setUserToken(token);
+                  } else {
+                    setErrorMessage("Passwords must be the same");
                   }
                 } else {
-                  setErrorMessage("Passwords must be the same");
+                  setErrorMessage("All fields must be filled");
                 }
-              } else {
-                setErrorMessage("All fields must be filled");
+              } catch (error) {
+                console.log(error.message);
+                alert("These email or username already exist");
               }
             }}
           >
@@ -132,6 +137,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     marginBottom: 50,
+    paddingTop: Constants.statusBarHeight,
   },
   logo: {
     height: 200,

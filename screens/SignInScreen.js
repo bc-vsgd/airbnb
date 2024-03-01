@@ -1,5 +1,8 @@
+// Packages
 import axios from "axios";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+// Components
 import {
   Text,
   View,
@@ -9,17 +12,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// Constants
+import Constants from "expo-constants";
 
 const SignInScreen = ({ navigation, setUserToken }) => {
   const url =
     "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in";
-
+  // States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView style={styles.container}>
       {/* Logo View */}
       <View>
         <Image
@@ -92,6 +96,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     marginBottom: 50,
+    paddingTop: Constants.statusBarHeight,
   },
   logo: {
     height: 200,
