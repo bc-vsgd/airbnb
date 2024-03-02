@@ -9,10 +9,12 @@ import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import HomeScreen from "./screens/HomeScreen";
 import RoomScreen from "./screens/RoomScreen";
+import AroundMeScreen from "./screens/AroundMeScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const url = "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms";
+const url = "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb";
 
 export default function App() {
   // States
@@ -44,12 +46,24 @@ export default function App() {
           <>
             <Stack.Screen name="signin">
               {(props) => {
-                return <SignInScreen {...props} setUserToken={setUserToken} />;
+                return (
+                  <SignInScreen
+                    {...props}
+                    setUserToken={setUserToken}
+                    url={url}
+                  />
+                );
               }}
             </Stack.Screen>
             <Stack.Screen name="signup">
               {(props) => {
-                return <SignUpScreen {...props} setUserToken={setUserToken} />;
+                return (
+                  <SignUpScreen
+                    {...props}
+                    setUserToken={setUserToken}
+                    url={url}
+                  />
+                );
               }}
             </Stack.Screen>
           </>
@@ -76,15 +90,35 @@ export default function App() {
                           <Stack.Screen
                             name="room"
                             options={{ headerShown: false }}
-                            component={RoomScreen}
-                          />
+                          >
+                            {(props) => {
+                              return <RoomScreen {...props} />;
+                            }}
+                          </Stack.Screen>
                         </Stack.Navigator>
                       );
                     }}
                   </Tab.Screen>
-                  {/* NEXT SCREENS TO DO */}
-                  {/* <Tab.Screen name="Around me" />
-                  <Tab.Screen name="My profile" /> */}
+                  <Tab.Screen
+                    name="aroundmeTab"
+                    options={{ headerShown: false, title: "Around me" }}
+                  >
+                    {() => {
+                      return (
+                        <Stack.Navigator>
+                          <Stack.Screen
+                            name="aroundme"
+                            options={{ headerShown: false }}
+                          >
+                            {(props) => {
+                              return <AroundMeScreen {...props} url={url} />;
+                            }}
+                          </Stack.Screen>
+                        </Stack.Navigator>
+                      );
+                    }}
+                  </Tab.Screen>
+                  <Tab.Screen name="My profile" component={ProfileScreen} />
                 </Tab.Navigator>
               );
             }}

@@ -15,9 +15,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 // Constants
 import Constants from "expo-constants";
 
-const SignInScreen = ({ navigation, setUserToken }) => {
-  const url =
-    "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in";
+const SignInScreen = ({ navigation, setUserToken, url }) => {
   // States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,7 +60,10 @@ const SignInScreen = ({ navigation, setUserToken }) => {
             onPress={async () => {
               try {
                 if (email && password) {
-                  const response = await axios.post(url, { email, password });
+                  const response = await axios.post(`${url}/user/log_in`, {
+                    email,
+                    password,
+                  });
                   const { id, token } = response.data;
                   // console.log("id, token >> ", id, token);
                   AsyncStorage.setItem("token", token);

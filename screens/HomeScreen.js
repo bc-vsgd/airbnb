@@ -10,18 +10,37 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 // Constants
 import Constants from "expo-constants";
+// Icons
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation, url }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
 
+  const getRatingArray = (rating) => {
+    const starsArray = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        starsArray.push(
+          <FontAwesome5 name="star" size={24} color="yellow" key={i} />
+        );
+      } else {
+        starsArray.push(
+          <FontAwesome5 name="star" size={24} color="grey" key={i} />
+        );
+      }
+    }
+    return starsArray;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(`${url}/rooms`);
         setData(data);
         setIsLoading(false);
       } catch (error) {
@@ -42,35 +61,39 @@ const HomeScreen = ({ navigation, url }) => {
       style={styles.container}
       renderItem={({ item }) => {
         return (
-          <View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("room", {
+                id: item._id,
+                url: `${url}/rooms`,
+              });
+            }}
+            activeOpacity={0.7}
+          >
             <View>
-              <ImageBackground
-                source={{ uri: item.photos[0].url }}
-                style={styles.offerImg}
-              >
-                <Text style={styles.price}>{item.price} €</Text>
-              </ImageBackground>
-            </View>
-            <View style={styles.flexRow}>
               <View>
-                <Text
-                  onPress={() => {
-                    navigation.navigate("room", { id: item._id, url: url });
-                  }}
+                <ImageBackground
+                  source={{ uri: item.photos[0].url }}
+                  style={styles.offerImg}
                 >
-                  {item.title}
-                </Text>
-                <View style={styles.flexRow}>
-                  <Text>{item.ratingValue}</Text>
-                  <Text>{item.reviews} reviews</Text>
-                </View>
+                  <Text style={styles.price}>{item.price} €</Text>
+                </ImageBackground>
               </View>
-              <Image
-                source={{ uri: item.user.account.photo.url }}
-                style={styles.userImg}
-              />
+              <View style={styles.flexRow}>
+                <View>
+                  <Text>{item.title}</Text>
+                  <View style={styles.flexRow}>
+                    <Text>{getRatingArray(item.ratingValue)}</Text>
+                    <Text>{item.reviews} reviews</Text>
+                  </View>
+                </View>
+                <Image
+                  source={{ uri: item.user.account.photo.url }}
+                  style={styles.userImg}
+                />
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         );
       }}
     />

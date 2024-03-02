@@ -1,6 +1,7 @@
 // Packages
 import { useState, useEffect } from "react";
 import axios from "axios";
+import MapView, { Marker } from "react-native-maps";
 // Components
 import {
   StyleSheet,
@@ -17,38 +18,43 @@ import Constants from "expo-constants";
 
 const RoomScreen = ({ route, navigation }) => {
   const { id, url } = route.params;
+  console.log("room screen: id >> ", id);
+  // States
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   //   Description text number of lines
   const [nbLines, setNbLines] = useState(3);
   //   Number of rating stars
-  const [goodRating, setGoodRating] = useState("");
-  const [badRating, setBadRating] = useState("");
-  let goodStars = [];
-  let badStars = [];
-  //   console.log("RoomScreen, id >>> ", id);
+  const [ratingStars, setRatingStars] = useState([]);
+
+  // Get yellow / grey rating stars
+  const getRatingArray = (rating) => {
+    const starsArray = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        starsArray.push(
+          <FontAwesome5 name="star" size={24} color="yellow" key={i} />
+        );
+      } else {
+        starsArray.push(
+          <FontAwesome5 name="star" size={24} color="grey" key={i} />
+        );
+      }
+    }
+    setRatingStars(starsArray);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${url}/${id}`);
+        // console.log("rommscreen, id >>> ", id);
         const { ratingValue } = data;
-        for (let i = 0; i < ratingValue; i++) {
-          goodStars.push(
-            <FontAwesome5 name="star" size={24} color="yellow" key={i} />
-          );
-        }
-        for (let i = 0; i < 5 - ratingValue; i++) {
-          badStars.push(
-            <FontAwesome5 name="star" size={24} color="grey" key={i} />
-          );
-        }
-        setGoodRating(goodStars);
-        setBadRating(badStars);
+        getRatingArray(ratingValue);
         setData(data);
         setIsLoading(false);
       } catch (error) {
-        console.log(error.response);
+        console.log(error);
       }
     };
     fetchData();
@@ -68,8 +74,7 @@ const RoomScreen = ({ route, navigation }) => {
         <View>
           <Text>{data.title}</Text>
           <View style={styles.flexRow}>
-            <Text>{goodRating}</Text>
-            <Text>{badRating}</Text>
+            <Text>{ratingStars}</Text>
             <Text>{data.reviews} reviews</Text>
           </View>
         </View>
@@ -87,6 +92,24 @@ const RoomScreen = ({ route, navigation }) => {
         >
           {data.description}
         </Text>
+      </View>
+      <View>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: 48.856614,
+            longitude: 2.3522219,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1,
+          }}
+        >
+          <Marker
+            coordinate={{
+              latitude: data.location[1],
+              longitude: data.location[0],
+            }}
+          />
+        </MapView>
       </View>
     </View>
   );
@@ -117,6 +140,10 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     resizeMode: "contain",
+  },
+  map: {
+    width: 300,
+    height: 300,
   },
 });
 export default RoomScreen;
