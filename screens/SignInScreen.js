@@ -20,12 +20,13 @@ const SignInScreen = ({ navigation, setUserToken, url }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
   return (
     <KeyboardAwareScrollView style={styles.container}>
       {/* Logo View */}
       <View>
         <Image
-          source={require("../assets/airbnb-logo.png")}
+          source={require("../assets/airbnb_logo.png")}
           style={styles.logo}
         />
         <Text>Sign in</Text>
@@ -66,7 +67,7 @@ const SignInScreen = ({ navigation, setUserToken, url }) => {
                   });
                   const { id, token } = response.data;
                   // console.log("id, token >> ", id, token);
-                  AsyncStorage.setItem("token", token);
+                  await AsyncStorage.setItem("userToken", token);
                   setUserToken(token);
                 } else {
                   setErrorMessage("All fields must be filled");

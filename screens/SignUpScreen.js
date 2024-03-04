@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // Constants
 import Constants from "expo-constants";
 
@@ -28,7 +29,7 @@ const SignUpScreen = ({ navigation, setUserToken, url }) => {
       {/* Logo View */}
       <View>
         <Image
-          source={require("../assets/airbnb-logo.png")}
+          source={require("../assets/airbnb_logo.png")}
           style={styles.logo}
         />
         <Text>Sign up</Text>
@@ -103,6 +104,7 @@ const SignUpScreen = ({ navigation, setUserToken, url }) => {
                     });
                     const { token } = response.data;
                     // console.log(token);
+                    await AsyncStorage.setItem("userToken", token);
                     setUserToken(token);
                   } else {
                     setErrorMessage("Passwords must be the same");

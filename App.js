@@ -1,5 +1,6 @@
 // Packages
 import { useState, useEffect } from "react";
+import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -8,9 +9,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import HomeScreen from "./screens/HomeScreen";
-import RoomScreen from "./screens/RoomScreen";
 import AroundMeScreen from "./screens/AroundMeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+// Components
+import Header from "./components/Header";
+// Icons
+import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,31 +75,36 @@ export default function App() {
             </Stack.Screen>
           </>
         ) : (
-          <Stack.Screen name="tab" options={{ headerShown: false }}>
+          <Stack.Screen name="tabScreen" options={{ headerShown: false }}>
             {() => {
               return (
-                <Tab.Navigator>
+                <Tab.Navigator screenOptions={{ headerShown: false }}>
                   <Tab.Screen
                     name="homeTab"
-                    options={{ headerShown: false, title: "Home" }}
+                    options={{
+                      tabBarLabel: "Home",
+                      tabBarIcon: () => {
+                        return (
+                          <AntDesign name="home" size={24} color="black" />
+                        );
+                      },
+                    }}
                   >
                     {() => {
                       return (
                         <Stack.Navigator>
                           <Stack.Screen
                             name="home"
-                            options={{ headerShown: false }}
-                          >
-                            {(props) => {
-                              return <HomeScreen {...props} url={url} />;
+                            options={{
+                              headerTitle: () => {
+                                return <Header />;
+                              },
                             }}
-                          </Stack.Screen>
-                          <Stack.Screen
-                            name="room"
-                            options={{ headerShown: false }}
                           >
                             {(props) => {
-                              return <RoomScreen {...props} />;
+                              return (
+                                <HomeScreen {...props} url={`${url}/rooms`} />
+                              );
                             }}
                           </Stack.Screen>
                         </Stack.Navigator>
@@ -100,25 +112,53 @@ export default function App() {
                     }}
                   </Tab.Screen>
                   <Tab.Screen
-                    name="aroundmeTab"
-                    options={{ headerShown: false, title: "Around me" }}
+                    name="aroundMeTab"
+                    options={{
+                      tabBarLabel: "Around me",
+                      tabBarIcon: () => {
+                        return (
+                          <MaterialCommunityIcons
+                            name="map-marker-outline"
+                            size={24}
+                            color="black"
+                          />
+                        );
+                      },
+                    }}
                   >
                     {() => {
                       return (
                         <Stack.Navigator>
                           <Stack.Screen
-                            name="aroundme"
-                            options={{ headerShown: false }}
-                          >
-                            {(props) => {
-                              return <AroundMeScreen {...props} url={url} />;
-                            }}
-                          </Stack.Screen>
+                            name="aroundMe"
+                            component={AroundMeScreen}
+                          />
                         </Stack.Navigator>
                       );
                     }}
                   </Tab.Screen>
-                  <Tab.Screen name="My profile" component={ProfileScreen} />
+                  <Tab.Screen
+                    name="profileTab"
+                    options={{
+                      tabBarLabel: "My profile",
+                      tabBarIcon: () => {
+                        return (
+                          <Octicons name="person" size={24} color="black" />
+                        );
+                      },
+                    }}
+                  >
+                    {() => {
+                      return (
+                        <Stack.Navigator>
+                          <Stack.Screen
+                            name="profile"
+                            component={ProfileScreen}
+                          />
+                        </Stack.Navigator>
+                      );
+                    }}
+                  </Tab.Screen>
                 </Tab.Navigator>
               );
             }}
