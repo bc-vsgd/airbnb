@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, Image } from "react-native";
 const Header = () => {
   return (
     <View>
-      {/* <Text>Header</Text> */}
       <Image
         source={require("../assets/airbnb_logo.png")}
         style={styles.logo}

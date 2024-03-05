@@ -1,10 +1,14 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ setUserToken }) => {
   return (
-    <View>
-      <Text>Profile Screen</Text>
-    </View>
+    <TouchableOpacity
+      onPress={() => {
+        setUserToken(null);
+      }}
+    >
+      <Text>Log out</Text>
+    </TouchableOpacity>
   );
 };
 

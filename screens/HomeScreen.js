@@ -11,7 +11,8 @@ import {
   ImageBackground,
   Image,
 } from "react-native";
-
+// Screens
+import RoomScreen from "./RoomScreen";
 // Icons
 import { Octicons } from "@expo/vector-icons";
 
@@ -24,7 +25,7 @@ const HomeScreen = ({ navigation, url }) => {
       try {
         // data: offers array
         const { data } = await axios.get(url);
-        // console.log("home, data>> ", JSON.stringify(data, null, 2));
+        console.log("home, data>> ", JSON.stringify(data, null, 2));
         setRoomsData(data);
       } catch (error) {
         console.log("home, error >>> ", error);
@@ -35,7 +36,6 @@ const HomeScreen = ({ navigation, url }) => {
   }, []);
 
   const getRatingStars = (rate) => {
-    console.log(rate);
     const ratingStars = [];
     for (let i = 1; i <= 5; i++) {
       if (i <= rate) {
@@ -44,7 +44,6 @@ const HomeScreen = ({ navigation, url }) => {
         ratingStars.push(<Octicons name="star" size={24} color="grey" />);
       }
     }
-    console.log(ratingStars);
     return ratingStars;
   };
 
@@ -53,12 +52,14 @@ const HomeScreen = ({ navigation, url }) => {
   ) : (
     <FlatList
       data={roomsData}
-      keyExtractor={(item) => {
-        return item._id;
-      }}
+      keyExtractor={(room) => room._id}
       renderItem={({ item }) => {
         return (
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("room", { id: item._id });
+            }}
+          >
             <ImageBackground
               source={{ uri: item.photos[0].url }}
               style={styles.roomImg}

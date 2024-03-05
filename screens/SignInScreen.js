@@ -65,10 +65,15 @@ const SignInScreen = ({ navigation, setUserToken, url }) => {
                     email,
                     password,
                   });
-                  const { id, token } = response.data;
+                  // const { id, token } = response.data;
+                  const data = response.data;
                   // console.log("id, token >> ", id, token);
-                  await AsyncStorage.setItem("userToken", token);
-                  setUserToken(token);
+                  if (data.token) {
+                    await AsyncStorage.setItem("userToken", data.token);
+                  } else {
+                    await AsyncStorage.removeItem("userToken");
+                  }
+                  setUserToken(data.token);
                 } else {
                   setErrorMessage("All fields must be filled");
                 }

@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import HomeScreen from "./screens/HomeScreen";
+import RoomScreen from "./screens/RoomScreen";
 import AroundMeScreen from "./screens/AroundMeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 // Components
@@ -34,10 +35,10 @@ export default function App() {
         const foundToken = await AsyncStorage.getItem("userToken");
         // console.log("App, foundToken >> ", foundToken);
         setUserToken(foundToken);
-        setIsLoading(false);
       } catch (error) {
         console.log(error.response);
       }
+      setIsLoading(false);
     };
     getUserToken();
   }, []);
@@ -107,6 +108,20 @@ export default function App() {
                               );
                             }}
                           </Stack.Screen>
+                          <Stack.Screen
+                            name="room"
+                            options={{
+                              headerTitle: () => {
+                                return <Header />;
+                              },
+                            }}
+                          >
+                            {(props) => {
+                              return (
+                                <RoomScreen {...props} url={`${url}/rooms`} />
+                              );
+                            }}
+                          </Stack.Screen>
                         </Stack.Navigator>
                       );
                     }}
@@ -153,8 +168,21 @@ export default function App() {
                         <Stack.Navigator>
                           <Stack.Screen
                             name="profile"
-                            component={ProfileScreen}
-                          />
+                            options={{
+                              headerTitle: () => {
+                                return <Header />;
+                              },
+                            }}
+                          >
+                            {(props) => {
+                              return (
+                                <ProfileScreen
+                                  {...props}
+                                  setUserToken={setUserToken}
+                                />
+                              );
+                            }}
+                          </Stack.Screen>
                         </Stack.Navigator>
                       );
                     }}
