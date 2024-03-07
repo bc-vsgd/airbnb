@@ -96,15 +96,16 @@ const SignUpScreen = ({ navigation, setUserToken, url }) => {
               try {
                 if (email && username && description && password && password2) {
                   if (password === password2) {
-                    const response = await axios.post(`${url}/user/sign_up`, {
+                    const { data } = await axios.post(`${url}/user/sign_up`, {
                       email,
                       username,
                       password,
                       description,
                     });
-                    const { token } = response.data;
+                    const { id, token } = data;
                     // console.log(token);
                     await AsyncStorage.setItem("userToken", token);
+                    await AsyncStorage.setItem("userId", id);
                     setUserToken(token);
                   } else {
                     setErrorMessage("Passwords must be the same");

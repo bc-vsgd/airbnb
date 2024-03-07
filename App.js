@@ -31,7 +31,7 @@ export default function App() {
     const getUserToken = async () => {
       try {
         const foundToken = await AsyncStorage.getItem("userToken");
-        // console.log("App, foundToken >> ", foundToken);
+        console.log("App, foundToken >> ", foundToken);
         setUserToken(foundToken);
       } catch (error) {
         console.log(error.response);
@@ -205,7 +205,9 @@ export default function App() {
                               return (
                                 <ProfileScreen
                                   {...props}
+                                  userToken={userToken}
                                   setUserToken={setUserToken}
+                                  url={`${url}/user`}
                                 />
                               );
                             }}

@@ -61,19 +61,22 @@ const SignInScreen = ({ navigation, setUserToken, url }) => {
             onPress={async () => {
               try {
                 if (email && password) {
-                  const response = await axios.post(`${url}/user/log_in`, {
+                  const { data } = await axios.post(`${url}/user/log_in`, {
                     email,
                     password,
                   });
-                  // const { id, token } = response.data;
-                  const data = response.data;
+                  console.log("sign in - data >>> ", data);
+                  const { id, token } = data;
                   // console.log("id, token >> ", id, token);
-                  if (data.token) {
-                    await AsyncStorage.setItem("userToken", data.token);
+                  if (id) {
+                    await AsyncStorage.setItem("userId", id);
+                  }
+                  if (token) {
+                    await AsyncStorage.setItem("userToken", token);
                   } else {
                     await AsyncStorage.removeItem("userToken");
                   }
-                  setUserToken(data.token);
+                  setUserToken(token);
                 } else {
                   setErrorMessage("All fields must be filled");
                 }
