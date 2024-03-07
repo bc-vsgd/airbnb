@@ -1,6 +1,5 @@
 // Packages
 import { useState, useEffect } from "react";
-import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -15,7 +14,6 @@ import ProfileScreen from "./screens/ProfileScreen";
 // Components
 import Header from "./components/Header";
 // Icons
-import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
@@ -114,6 +112,7 @@ export default function App() {
                               headerTitle: () => {
                                 return <Header />;
                               },
+                              headerBackTitleVisible: false,
                             }}
                           >
                             {(props) => {
@@ -146,8 +145,36 @@ export default function App() {
                         <Stack.Navigator>
                           <Stack.Screen
                             name="aroundMe"
-                            component={AroundMeScreen}
-                          />
+                            options={{
+                              headerTitle: () => {
+                                return <Header />;
+                              },
+                            }}
+                          >
+                            {(props) => {
+                              return (
+                                <AroundMeScreen
+                                  {...props}
+                                  url={`${url}/rooms`}
+                                />
+                              );
+                            }}
+                          </Stack.Screen>
+                          <Stack.Screen
+                            name="roomAroundMe"
+                            options={{
+                              headerTitle: () => {
+                                return <Header />;
+                              },
+                              headerBackTitleVisible: false,
+                            }}
+                          >
+                            {(props) => {
+                              return (
+                                <RoomScreen {...props} url={`${url}/rooms`} />
+                              );
+                            }}
+                          </Stack.Screen>
                         </Stack.Navigator>
                       );
                     }}

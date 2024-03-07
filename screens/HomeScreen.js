@@ -11,8 +11,6 @@ import {
   ImageBackground,
   Image,
 } from "react-native";
-// Screens
-import RoomScreen from "./RoomScreen";
 // Icons
 import { Octicons } from "@expo/vector-icons";
 
@@ -25,7 +23,7 @@ const HomeScreen = ({ navigation, url }) => {
       try {
         // data: offers array
         const { data } = await axios.get(url);
-        console.log("home, data>> ", JSON.stringify(data, null, 2));
+        // console.log("home, data>> ", JSON.stringify(data, null, 2));
         setRoomsData(data);
       } catch (error) {
         console.log("home, error >>> ", error);
